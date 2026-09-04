@@ -3,123 +3,80 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-   <title>會議焚化儀式 - v1.0</title>
+    <title>會議焚化儀式 - v1.5</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* By Kevin - 基礎環境火光 */
         body {
             background: radial-gradient(circle at 50% 120%, #3a0c00 0%, #110506 50%, #000000 100%);
             background-size: 200% 200%;
             touch-action: manipulation;
-            overflow: hidden; /* 防止震動時出現捲動條 */
+            overflow: hidden;
         }
 
-        /* 劇烈震動特效 (應用於整個畫面) */
-        .screen-shake {
-            animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) infinite;
-        }
+        /* By Kevin 根據火勢強度調整的震動 */
+        .shake-light { animation: shake 0.5s ease-in-out infinite; }
+        .shake-heavy { animation: shake 0.15s cubic-bezier(.36,.07,.19,.97) infinite; }
 
         @keyframes shake {
-            0% { transform: translate(1px, 1px) rotate(0deg); }
-            10% { transform: translate(-2px, -2px) rotate(-1deg); }
-            20% { transform: translate(-3px, 0px) rotate(1deg); }
-            30% { transform: translate(3px, 2px) rotate(0deg); }
-            40% { transform: translate(1px, -1px) rotate(1deg); }
-            50% { transform: translate(-1px, 2px) rotate(-1deg); }
-            60% { transform: translate(-3px, 1px) rotate(0deg); }
-            70% { transform: translate(3px, 1px) rotate(-1deg); }
-            80% { transform: translate(-1px, -1px) rotate(1deg); }
-            90% { transform: translate(1px, 2px) rotate(0deg); }
-            100% { transform: translate(1px, -2px) rotate(-1deg); }
+            0% { transform: translate(0, 0) rotate(0deg); }
+            25% { transform: translate(-3px, 2px) rotate(-1deg); }
+            50% { transform: translate(3px, -2px) rotate(1deg); }
+            75% { transform: translate(-2px, -3px) rotate(0deg); }
+            100% { transform: translate(0, 0) rotate(0deg); }
         }
 
-        /* 文字極端燃燒扭曲特效 */
-        .extreme-burn {
-            animation: extremeBurnEffect 2s ease-in forwards;
+        /* 階段一：持續燃燒 (8秒間) */
+        .continuous-burn {
+            animation: burnWobble 0.5s infinite alternate;
+            transition: all 0.1s ease;
         }
 
-        @keyframes extremeBurnEffect {
-            0% {
-                transform: translate(-50%, -50%) scale(1) skewX(0deg);
-                color: #ffffff;
-                text-shadow: 0 0 10px #fff;
-                opacity: 1;
-                filter: blur(0px);
-            }
-            10% {
-                transform: translate(-50%, -50%) scale(1.2) skewX(-10deg);
-                color: #ffff88;
-                text-shadow: 0 0 20px #ff0, 0 0 40px #f90;
-            }
-            40% {
-                transform: translate(-50%, -55%) scale(1.4) skewX(10deg);
-                color: #ff4500;
-                text-shadow: 0 -20px 40px #f00, 0 -40px 80px #800;
-                filter: blur(1px);
-            }
-            70% {
-                transform: translate(-50%, -65%) scale(1.5) skewX(-5deg) scaleY(1.5);
-                color: #111;
-                text-shadow: 0 -30px 50px #000;
-                opacity: 0.9;
-                filter: blur(4px);
-            }
-            100% {
-                transform: translate(-50%, -100%) scale(0.5) skewX(20deg) scaleY(3);
-                color: #000;
-                text-shadow: 0 -50px 100px #000;
-                opacity: 0;
-                filter: blur(10px);
-            }
+        @keyframes burnWobble {
+            0% { color: #ffeb3b; text-shadow: 0 0 10px #ff5722, 0 0 20px #e65100; transform: translate(-50%, -50%) scale(1) skewX(-2deg); }
+            100% { color: #ff9800; text-shadow: 0 -10px 30px #d50000, 0 -20px 50px #880e4f; transform: translate(-50%, -55%) scale(1.05) skewX(2deg); }
         }
 
-        /* 爆發式功德浮現 */
+        /* 階段二：燒盡成灰 (最後收尾) */
+        .burn-to-ash {
+            animation: ashEffect 1.5s ease-in forwards;
+        }
+
+        @keyframes ashEffect {
+            0% { transform: translate(-50%, -55%) scale(1.05); color: #ff4500; text-shadow: 0 -20px 40px #f00; filter: blur(0px); opacity: 1; }
+            100% { transform: translate(-50%, -100%) scale(0.3); color: #111; text-shadow: 0 -50px 100px #000; filter: blur(15px); opacity: 0; }
+        }
+
+        /* 功德浮現 */
         .merit-pop {
-            animation: meritPopEffect 2.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+            animation: meritPopEffect 3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
         }
 
         @keyframes meritPopEffect {
-            0% {
-                transform: translate(-50%, -20px) scale(0);
-                opacity: 0;
-                text-shadow: 0 0 0 rgba(255, 215, 0, 0);
-            }
-            20% {
-                transform: translate(-50%, -80px) scale(1.5);
-                opacity: 1;
-                text-shadow: 0 0 50px rgba(255, 215, 0, 1), 0 0 100px rgba(255, 140, 0, 1);
-            }
-            40% {
-                transform: translate(-50%, -80px) scale(1.2);
-                opacity: 1;
-                text-shadow: 0 0 30px rgba(255, 215, 0, 0.8);
-            }
-            80% {
-                transform: translate(-50%, -120px) scale(1.2);
-                opacity: 1;
-            }
-            100% {
-                transform: translate(-50%, -180px) scale(0.8);
-                opacity: 0;
-                text-shadow: 0 0 10px rgba(255, 215, 0, 0);
-            }
+            0% { transform: translate(-50%, -20px) scale(0); opacity: 0; }
+            15% { transform: translate(-50%, -80px) scale(1.5); opacity: 1; text-shadow: 0 0 50px rgba(255, 215, 0, 1), 0 0 100px rgba(255, 140, 0, 1); }
+            30% { transform: translate(-50%, -80px) scale(1.2); opacity: 1; text-shadow: 0 0 30px rgba(255, 215, 0, 0.8); }
+            70% { transform: translate(-50%, -100px) scale(1.2); opacity: 1; }
+            100% { transform: translate(-50%, -150px) scale(0.8); opacity: 0; }
         }
+
+        /* 隱藏滾動條 */
+        ::-webkit-scrollbar { display: none; }
     </style>
 </head>
 <body id="mainBody" class="min-h-screen text-white flex flex-col items-center justify-center font-sans">
 
-    <!-- Canvas 火焰特效層 (置於背景與UI之間) -->
+    <!-- Canvas 火焰特效層 -->
     <canvas id="fireCanvas" class="fixed inset-0 pointer-events-none z-10 w-full h-full"></canvas>
 
     <!-- 頂部標題區 -->
-    <div class="absolute top-10 left-0 w-full text-center z-20 px-4">
+    <div class="absolute top-10 left-0 w-full text-center z-20 px-4 transition-opacity duration-500" id="headerTitle">
         <h1 class="text-3xl md:text-5xl font-black tracking-widest text-transparent bg-clip-text bg-gradient-to-b from-orange-400 to-red-600 drop-shadow-[0_0_10px_rgba(234,88,12,0.8)]">
             🔥會議焚化儀式🔥
         </h1>
         <p class="text-gray-400 mt-2 text-sm md:text-base font-bold">讓世間有需要灰飛煙滅的東西(感覺上)灰飛煙滅</p>
     </div>
 
-    <!-- 互動操作區 -->
+    <!-- 初始互動操作區 -->
     <div class="w-11/12 max-w-md bg-black/60 backdrop-blur-md border-2 border-red-900/50 p-6 md:p-8 rounded-3xl shadow-[0_0_50px_rgba(153,27,27,0.3)] z-30 transition-all duration-300" id="controlPanel">
         <div class="flex flex-col gap-5">
             <input 
@@ -140,18 +97,35 @@
         </div>
     </div>
 
+    <!-- 8秒燃燒期間的火水控制區 -->
+    <div id="fuelPanel" class="fixed bottom-10 left-0 w-full flex flex-col items-center justify-center z-50 pointer-events-none opacity-0 transition-opacity duration-300 translate-y-10">
+        <p id="fuelCounterText" class="text-yellow-400 font-bold mb-2 text-lg drop-shadow-md opacity-0 transition-opacity">🔥 火勢加成 🔥</p>
+        <button 
+            onclick="addFuel()"
+            class="pointer-events-auto bg-gradient-to-t from-red-900 to-orange-500 active:scale-90 text-white font-black text-3xl py-5 px-10 rounded-full shadow-[0_0_40px_rgba(255,87,34,0.8)] border-4 border-yellow-500/50 flex items-center gap-2"
+        >
+            🛢️ 火上加油!
+        </button>
+        <p class="text-gray-300 mt-3 text-sm animate-pulse">狂點按鈕加強火勢！</p>
+    </div>
+
     <!-- HTML 文字動畫舞台 -->
     <div id="animationStage" class="fixed inset-0 pointer-events-none z-40"></div>
 
     <script>
-        // --- Canvas 火焰粒子系統 ---
         const canvas = document.getElementById('fireCanvas');
         const ctx = canvas.getContext('2d');
         let particles = [];
         let isEmitting = false;
         let animationId;
+        
+        // 核心變數：火勢強度，玩家點擊會增加此數值
+        let fireIntensity = 1.0; 
+        
+        // 互動狀態變數
+        let burnTimer;
+        let currentBurnText = null;
 
-        // 調整 Canvas 尺寸符合視窗
         function resizeCanvas() {
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
@@ -160,23 +134,29 @@
         resizeCanvas();
 
         class FireParticle {
-            constructor(x, y) {
-                // 發射範圍涵蓋畫面中央偏下一點點
-                this.x = x + (Math.random() - 0.5) * (window.innerWidth * 0.6); 
+            constructor(x, y, intensity) {
+                // 發射範圍與強度有關
+                this.x = x + (Math.random() - 0.5) * (window.innerWidth * 0.4 * Math.min(intensity, 3)); 
                 this.y = y + (Math.random() - 0.5) * 50;
-                this.vx = (Math.random() - 0.5) * 3; // 水平飄動
-                this.vy = (Math.random() * -12) - 5; // 快速向上衝
-                this.size = Math.random() * 40 + 20; // 粒子大小
+                
+                // 強度越高，火焰衝得越快、越高
+                this.vx = (Math.random() - 0.5) * 5 * intensity; 
+                this.vy = ((Math.random() * -15) - 5) * (1 + intensity * 0.5); 
+                
+                // 強度越高，粒子越大
+                this.size = (Math.random() * 40 + 20) * (1 + intensity * 0.3); 
                 this.life = 1.0;
-                this.decay = Math.random() * 0.02 + 0.015; // 衰減速度
-                this.isSmoke = Math.random() > 0.8; // 部分粒子變成黑煙
+                this.decay = Math.random() * 0.02 + 0.015;
+                
+                // 強度過高時，黑煙減少，呈現純粹的烈火
+                this.isSmoke = intensity < 2.5 ? Math.random() > 0.8 : Math.random() > 0.95; 
             }
 
             update() {
                 this.x += this.vx;
                 this.y += this.vy;
                 this.life -= this.decay;
-                this.size *= 0.96; // 逐漸縮小
+                this.size *= 0.96;
             }
 
             draw(ctx) {
@@ -186,20 +166,17 @@
                 ctx.arc(this.x, this.y, Math.max(0, this.size), 0, Math.PI * 2);
                 
                 if (this.isSmoke) {
-                    // 黑煙效果
                     ctx.fillStyle = `rgba(20, 20, 20, ${this.life * 0.5})`;
                     ctx.globalCompositeOperation = 'source-over';
                 } else {
-                    // 火焰顏色變化：白 -> 黃 -> 橘紅 -> 暗紅
                     let r = 255;
                     let g = Math.max(0, Math.floor(255 * (this.life - 0.3) * 1.5));
                     let b = Math.max(0, Math.floor(255 * (this.life - 0.7) * 3));
                     let a = this.life;
                     
                     ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${a})`;
-                    ctx.globalCompositeOperation = 'lighter'; // 讓火光疊加發亮
+                    ctx.globalCompositeOperation = 'lighter';
                 }
-                
                 ctx.fill();
             }
         }
@@ -207,33 +184,51 @@
         function animateFire() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             
-            // 如果處於噴發狀態，每幀產生大量粒子
+            // 物理衰減：每一幀火勢強度會慢慢降回基礎值 1.0
+            if (fireIntensity > 1.0) {
+                fireIntensity *= 0.96; 
+                if (fireIntensity < 1.0) fireIntensity = 1.0;
+            }
+
+            // 更新畫面震動狀態
+            const body = document.getElementById('mainBody');
+            if (isEmitting) {
+                if (fireIntensity > 2.5) {
+                    body.className = "min-h-screen text-white flex flex-col items-center justify-center font-sans shake-heavy";
+                } else if (fireIntensity > 1.5) {
+                    body.className = "min-h-screen text-white flex flex-col items-center justify-center font-sans shake-light";
+                } else {
+                    body.className = "min-h-screen text-white flex flex-col items-center justify-center font-sans";
+                }
+            } else {
+                body.className = "min-h-screen text-white flex flex-col items-center justify-center font-sans";
+            }
+
+            // 產生新粒子
             if (isEmitting) {
                 const centerX = canvas.width / 2;
-                const centerY = canvas.height / 2 + 50;
-                // 每幀產生 15 個粒子，營造爆燃感
-                for(let i = 0; i < 15; i++) {
-                    particles.push(new FireParticle(centerX, centerY));
+                const centerY = canvas.height / 2 + 100;
+                
+                // 強度越高，每一幀噴出的粒子數量越多 (最高限制一次噴40顆防卡頓)
+                let emitCount = Math.min(Math.floor(10 * fireIntensity), 40);
+                
+                for(let i = 0; i < emitCount; i++) {
+                    particles.push(new FireParticle(centerX, centerY, fireIntensity));
                 }
             }
 
-            // 更新與繪製粒子
             for (let i = particles.length - 1; i >= 0; i--) {
                 const p = particles[i];
                 p.update();
                 p.draw(ctx);
-                if (p.life <= 0) {
-                    particles.splice(i, 1);
-                }
+                if (p.life <= 0) particles.splice(i, 1);
             }
 
-            // 只要還有粒子或正在噴發，就繼續循環
             if (particles.length > 0 || isEmitting) {
                 animationId = requestAnimationFrame(animateFire);
             }
         }
 
-        // --- UI 互動邏輯 ---
         document.getElementById('foodInput').addEventListener('keypress', function (e) {
             if (e.key === 'Enter') {
                 startIncineration();
@@ -241,12 +236,43 @@
             }
         });
 
+        // 玩家點擊「投入火水」時觸發
+        function addFuel() {
+            // 每次點擊增加火勢，設定上限避免數值爆炸
+            fireIntensity = Math.min(fireIntensity + 1.5, 6.0);
+            
+            // 顯示上方提示字
+            const counterText = document.getElementById('fuelCounterText');
+            counterText.classList.remove('opacity-0');
+            
+            // 手機強烈震動
+            if (navigator.vibrate) navigator.vibrate([40, 30, 40]);
+
+            // 讓燃燒的文字產生「白熱化膨脹」反應
+            if (currentBurnText) {
+                // 強制覆蓋 CSS 變色與放大
+                currentBurnText.style.color = '#ffffff';
+                currentBurnText.style.textShadow = '0 0 50px #fff, 0 0 100px #ffeb3b';
+                currentBurnText.style.transform = `translate(-50%, -50%) scale(${1 + (fireIntensity * 0.15)})`;
+                
+                // 150毫秒後恢復原本的持續燃燒 CSS
+                setTimeout(() => {
+                    if(currentBurnText && isEmitting) {
+                        currentBurnText.style.color = '';
+                        currentBurnText.style.textShadow = '';
+                        currentBurnText.style.transform = '';
+                    }
+                }, 150);
+            }
+        }
+
+        // 啟動主流程
         function startIncineration() {
             const input = document.getElementById('foodInput');
             const foodName = input.value.trim();
-            const btn = document.getElementById('incinerateBtn');
             const panel = document.getElementById('controlPanel');
-            const body = document.getElementById('mainBody');
+            const header = document.getElementById('headerTitle');
+            const fuelPanel = document.getElementById('fuelPanel');
             const stage = document.getElementById('animationStage');
 
             if (!foodName) {
@@ -255,60 +281,68 @@
                 return;
             }
 
-            // 準備狀態
+            // 隱藏初始介面
             input.value = '';
-            btn.disabled = true;
-            panel.classList.add('opacity-0', 'pointer-events-none'); // 焚化時隱藏面板
+            panel.classList.add('opacity-0', 'pointer-events-none'); 
+            header.classList.add('opacity-0');
             
-            // 1. 啟動螢幕劇烈震動
-            body.classList.add('screen-shake');
-
-            // 2. 啟動 Canvas 爆燃特效
+            // 重置火勢
+            fireIntensity = 1.0;
             isEmitting = true;
-            if (!animationId || particles.length === 0) {
-                animateFire();
-            }
+            if (!animationId || particles.length === 0) animateFire();
 
-            // 3. 建立扭曲燃燒的文字
-            const burnText = document.createElement('div');
-            burnText.textContent = foodName;
-            burnText.className = 'absolute top-1/2 left-1/2 text-6xl md:text-8xl font-black text-center w-full px-4 extreme-burn z-40 break-words';
-            stage.appendChild(burnText);
+            // 建立燃燒中的文字
+            currentBurnText = document.createElement('div');
+            currentBurnText.textContent = foodName;
+            // 加上 continuous-burn 讓它在 8 秒內持續扭動
+            currentBurnText.className = 'absolute top-1/2 left-1/2 text-5xl md:text-8xl font-black text-center w-full px-4 break-words z-40 continuous-burn';
+            stage.appendChild(currentBurnText);
 
-            // 狂暴震動回饋 (如果手機支援)
-            if (navigator.vibrate) {
-                navigator.vibrate([100, 50, 100, 50, 200, 50, 300]); 
-            }
+            if (navigator.vibrate) navigator.vibrate(200);
 
-            // 4. 控制時間軸
+            // 滑出火水控制面板
             setTimeout(() => {
-                // 1.2秒後：停止產生火焰，讓餘火飄散
+                fuelPanel.classList.remove('opacity-0', 'translate-y-10');
+            }, 500);
+
+            // 設定 8 秒後結束燃燒階段
+            clearTimeout(burnTimer);
+            burnTimer = setTimeout(() => {
+                // 1. 收起火水面板
+                fuelPanel.classList.add('opacity-0', 'translate-y-10');
+                document.getElementById('fuelCounterText').classList.add('opacity-0');
+                
+                // 2. 停止添加新火源，讓火勢自然衰退
                 isEmitting = false;
-                body.classList.remove('screen-shake'); // 停止震動
-            }, 1200);
-
-            setTimeout(() => {
-                // 1.8秒後：食物燒盡，彈出爆發功德
-                if(stage.contains(burnText)) stage.removeChild(burnText);
-
-                const meritText = document.createElement('div');
-                meritText.innerHTML = '✨ 功德 +1 ✨';
-                meritText.className = 'absolute top-1/2 left-1/2 text-5xl md:text-7xl font-black text-yellow-300 merit-pop z-50 whitespace-nowrap';
-                stage.appendChild(meritText);
-
-                if (navigator.vibrate) {
-                    navigator.vibrate(400); // 功德長震動
+                
+                // 3. 文字切換至「燒盡成灰」的收尾動畫
+                if (currentBurnText) {
+                    currentBurnText.className = 'absolute top-1/2 left-1/2 text-5xl md:text-8xl font-black text-center w-full px-4 break-words z-40 burn-to-ash';
                 }
 
-                // 4.5秒後：完全重置，讓使用者可以再次輸入
+                // 4. 等待灰燼動畫播完後，彈出功德
                 setTimeout(() => {
-                    if(stage.contains(meritText)) stage.removeChild(meritText);
-                    btn.disabled = false;
-                    panel.classList.remove('opacity-0', 'pointer-events-none');
-                    // 取消 focus 以免在手機上一直彈出鍵盤，讓畫面保持乾淨
-                }, 2500);
+                    if(stage.contains(currentBurnText)) stage.removeChild(currentBurnText);
+                    currentBurnText = null;
 
-            }, 1800);
+                    const meritText = document.createElement('div');
+                    meritText.innerHTML = '✨ 功德 +1 ✨';
+                    meritText.className = 'absolute top-1/2 left-1/2 text-6xl md:text-8xl font-black text-yellow-300 merit-pop z-50 whitespace-nowrap';
+                    stage.appendChild(meritText);
+
+                    if (navigator.vibrate) navigator.vibrate([100, 50, 400]); 
+
+                    // 5. 功德浮現後重置所有 UI，準備下一輪
+                    setTimeout(() => {
+                        if(stage.contains(meritText)) stage.removeChild(meritText);
+                        panel.classList.remove('opacity-0', 'pointer-events-none');
+                        header.classList.remove('opacity-0');
+                        document.getElementById('incinerateBtn').disabled = false;
+                    }, 3500);
+
+                }, 1500); // 灰燼動畫時間 1.5 秒
+
+            }, 8000); // 核心 8 秒燃燒時間
         }
     </script>
 </body>
